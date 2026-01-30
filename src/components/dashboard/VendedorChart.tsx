@@ -33,15 +33,15 @@ export function VendedorChart({ data }: VendedorChartProps) {
   };
 
   return (
-    <div className="bg-card rounded-xl shadow-card border border-border/50 p-5 animate-fade-in">
-      <h3 className="text-lg font-semibold font-display mb-4">Performance por Vendedor</h3>
+    <div className="bg-card rounded-xl shadow-card border border-border/50 p-3 sm:p-5 animate-fade-in">
+      <h3 className="text-base sm:text-lg font-semibold font-display mb-3 sm:mb-4">Performance por Vendedor</h3>
       
-      <div className="h-[280px]">
+      <div className="h-[220px] sm:h-[280px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart 
             data={vendedorData} 
             layout="vertical"
-            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            margin={{ top: 5, right: 5, left: -15, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(214, 20%, 90%)" horizontal={false} />
             <XAxis 

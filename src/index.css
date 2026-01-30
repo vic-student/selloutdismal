@@ -152,11 +152,38 @@
   }
 
   .stat-card {
-    @apply bg-card rounded-xl p-5 shadow-card border border-border/50 transition-all duration-300;
+    @apply bg-card rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 shadow-card border border-border/50 transition-all duration-300;
   }
 
   .stat-card:hover {
     @apply shadow-lg -translate-y-0.5;
+  }
+
+  /* Mobile-first improvements */
+  @screen sm {
+    .stat-card {
+      @apply p-4;
+    }
+  }
+
+  /* Touch-friendly tap targets */
+  @media (max-width: 640px) {
+    button, 
+    [role="button"],
+    input,
+    select,
+    a {
+      min-height: 44px;
+    }
+    
+    /* Improve readability on small screens */
+    .recharts-legend-wrapper {
+      font-size: 10px !important;
+    }
+    
+    .recharts-text {
+      font-size: 10px !important;
+    }
   }
 
   .text-gradient {

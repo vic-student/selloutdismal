@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { 
   getUniqueEquipes, 
   getUniqueVendedores, 
+  getVendedoresByEquipe,
   getUniqueMeses, 
   getUniqueAnos,
   getUniqueBalconistas,
@@ -18,16 +19,16 @@ interface FilterPanelProps {
     vendedor: string;
     mes: string;
     ano: string;
+    status: string;
     searchBalconista: string;
     searchRevenda: string;
   };
   onFilterChange: (key: string, value: string) => void;
-  isMobile?: boolean;
-}
+  isMobile?: boolean;}
 
 export function FilterPanel({ filters, onFilterChange, isMobile = false }: FilterPanelProps) {
   const equipes = getUniqueEquipes();
-  const vendedores = getUniqueVendedores();
+  const vendedores = getVendedoresByEquipe(filters.equipe);
   const meses = getUniqueMeses();
   const anos = getUniqueAnos();
   const allBalconistas = getUniqueBalconistas();
@@ -43,8 +44,12 @@ export function FilterPanel({ filters, onFilterChange, isMobile = false }: Filte
   const clearFilters = () => {
     onFilterChange("equipe", "all");
     onFilterChange("vendedor", "all");
-    onFilterChange("mes", "all");
-    onFilterChange("ano", "all");
+    // Força mês e ano para Janeiro/2026 se existirem nas opções
+    const meses = getUniqueMeses();
+    const anos = getUniqueAnos().map(String);
+    onFilterChange("mes", meses.includes("Janeiro") ? "Janeiro" : "all");
+    onFilterChange("ano", anos.includes("2026") ? "2026" : "all");
+    onFilterChange("status", "all");
     onFilterChange("searchBalconista", "");
     onFilterChange("searchRevenda", "");
   };
@@ -78,7 +83,7 @@ export function FilterPanel({ filters, onFilterChange, isMobile = false }: Filte
   }, []);
 
   const containerClass = isMobile 
-    ? "flex flex-col gap-4" 
+    ? "flex flex-col gap-3 text-sm" 
     : "hidden lg:flex flex-wrap items-center gap-3 p-4 bg-card rounded-xl shadow-card border border-border/50";
 
   return (
@@ -153,7 +158,11 @@ export function FilterPanel({ filters, onFilterChange, isMobile = false }: Filte
       </div>
 
       {/* Equipe Filter */}
-      <Select value={filters.equipe} onValueChange={(v) => onFilterChange("equipe", v)}>
+      <Select value={filters.equipe} onValueChange={(v) => {
+        onFilterChange("equipe", v);
+        // Resetar vendedor quando mudar a equipe
+        onFilterChange("vendedor", "all");
+      }}>
         <SelectTrigger className="w-full lg:w-[140px] bg-background">
           <SelectValue placeholder="Equipe" />
         </SelectTrigger>
@@ -201,6 +210,18 @@ export function FilterPanel({ filters, onFilterChange, isMobile = false }: Filte
           {anos.map((a) => (
             <SelectItem key={a} value={String(a)}>{a}</SelectItem>
           ))}
+        </SelectContent>
+      </Select>
+
+      {/* Status Filter */}
+      <Select value={filters.status} onValueChange={(v) => onFilterChange("status", v)}>
+        <SelectTrigger className="w-full lg:w-[120px] bg-background">
+          <SelectValue placeholder="Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Todos Status</SelectItem>
+          <SelectItem value="Ativo">Ativo</SelectItem>
+          <SelectItem value="Bloqueado">Bloqueado</SelectItem>
         </SelectContent>
       </Select>
 

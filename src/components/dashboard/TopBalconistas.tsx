@@ -6,11 +6,24 @@ interface TopBalconistasProps {
 }
 
 export function TopBalconistas({ data }: TopBalconistasProps) {
-  // Sort by sellOut descending and get top 5
-  const topBalconistas = [...data]
+  // Agrupa vendas por balconista e soma o sellOut de todos os meses
+  const salesByBalconista: { [balconista: string]: { revenda: string; sellOut: number } } = {};
+  data.forEach(record => {
+    if (!salesByBalconista[record.balconista]) {
+      salesByBalconista[record.balconista] = {
+        revenda: record.revenda,
+        sellOut: 0
+      };
+    }
+    salesByBalconista[record.balconista].sellOut += record.sellOut;
+  });
+
+  // Cria array dos balconistas com somatório e ordena
+  const topBalconistas = Object.entries(salesByBalconista)
+    .map(([balconista, info]) => ({ balconista, revenda: info.revenda, sellOut: info.sellOut }))
     .filter(d => d.sellOut > 0)
     .sort((a, b) => b.sellOut - a.sellOut)
-    .slice(0, 5);
+    .slice(0, 4);
 
   const getRankIcon = (index: number) => {
     switch (index) {
@@ -39,33 +52,30 @@ export function TopBalconistas({ data }: TopBalconistasProps) {
   };
 
   return (
-    <div className="bg-card rounded-xl shadow-card border border-border/50 p-5 animate-fade-in">
-      <div className="flex items-center gap-2 mb-4">
-        <Trophy className="w-5 h-5 text-secondary" />
-        <h3 className="text-lg font-semibold font-display">Top Balconistas</h3>
+    <div className="bg-white rounded-xl shadow-md border border-border/30 p-3 sm:p-4 animate-fade-in w-full">
+      <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+        <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" />
+        <h3 className="text-base sm:text-xl font-bold font-display tracking-tight text-blue-900">Top Balconistas</h3>
       </div>
-      
-      <div className="space-y-3">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 px-1 sm:px-2 py-1 sm:py-2 w-full">
         {topBalconistas.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">
+          <p className="text-center text-muted-foreground py-2 w-full">
             Nenhum registro com vendas encontrado.
           </p>
         ) : (
           topBalconistas.map((record, index) => (
             <div 
               key={`${record.balconista}-${index}`}
-              className={`flex items-center gap-3 p-3 rounded-lg border transition-all hover:shadow-md ${getRankBg(index)}`}
+              className={`flex flex-col items-center justify-center gap-0.5 sm:gap-1 bg-white rounded-lg border border-border px-2 sm:px-3 py-2 shadow-sm transition-all hover:scale-[1.03] ${getRankBg(index)}`}
             >
-              <div className="flex-shrink-0">
-                {getRankIcon(index)}
+              {/* ...removed ranking number... */}
+              <div className="flex-1 min-w-0 text-center w-full">
+                <p className="font-semibold text-xs sm:text-sm leading-tight truncate" title={record.balconista}>{record.balconista}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground leading-tight truncate" title={record.revenda}>{record.revenda}</p>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{record.balconista}</p>
-                <p className="text-xs text-muted-foreground truncate">{record.revenda}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-bold text-lg text-primary">{record.sellOut}</p>
-                <p className="text-xs text-muted-foreground">vendas</p>
+              <div className="flex flex-col items-center justify-center mt-0.5 sm:mt-1">
+                <span className="font-extrabold text-xl sm:text-2xl text-primary leading-tight">{record.sellOut}</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground font-semibold">vendas</span>
               </div>
             </div>
           ))

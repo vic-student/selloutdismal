@@ -13,6 +13,8 @@ export default function Login({ onLogin }: { onLogin: () => void }) {
     e.preventDefault();
     if (user === USER && pass === PASS) {
       setError("");
+      // Salva flag de login persistente
+      localStorage.setItem("alreadyLoggedIn", "true");
       onLogin();
     } else {
       setError("Usuário ou senha incorretos.");

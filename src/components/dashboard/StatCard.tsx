@@ -49,29 +49,29 @@ export function StatCard({
         <div className="absolute inset-0 shadow-glow opacity-50" />
       )}
       
-      <div className="relative flex items-start justify-between">
-        <div className="flex-1">
-          <p className={`text-sm font-medium mb-1 ${variant !== "default" ? "" : "text-muted-foreground"}`}>
+      <div className="relative flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <p className={`text-xs sm:text-sm font-medium mb-0.5 sm:mb-1 truncate ${variant !== "default" ? "" : "text-muted-foreground"}`}>
             {title}
           </p>
-          <p className="text-3xl font-bold font-display tracking-tight">
+          <p className="text-xl sm:text-2xl md:text-3xl font-bold font-display tracking-tight truncate">
             {value}
           </p>
           {subtitle && (
-            <p className={`text-sm mt-1 ${subtitleStyles[variant]}`}>
+            <p className={`text-xs sm:text-sm mt-0.5 sm:mt-1 truncate ${subtitleStyles[variant]}`}>
               {subtitle}
             </p>
           )}
           {trend && (
-            <div className={`flex items-center gap-1 mt-2 text-sm font-medium ${trend.isPositive ? "text-success" : "text-destructive"}`}>
+            <div className={`flex items-center gap-1 mt-1 sm:mt-2 text-xs sm:text-sm font-medium ${trend.isPositive ? "text-success" : "text-destructive"}`}>
               <span>{trend.isPositive ? "↑" : "↓"}</span>
               <span>{Math.abs(trend.value)}%</span>
             </div>
           )}
         </div>
         
-        <div className={`p-3 rounded-xl ${iconStyles[variant]}`}>
-          <Icon className="w-6 h-6" />
+        <div className={`p-2 sm:p-3 rounded-lg sm:rounded-xl flex-shrink-0 ${iconStyles[variant]}`}>
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
         </div>
       </div>
     </div>

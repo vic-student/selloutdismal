@@ -15,12 +15,15 @@ const queryClient = new QueryClient();
 const App = () => {
   const [authenticated, setAuthenticated] = useState(() => {
     // Mantém login na sessão enquanto o navegador estiver aberto
-    return sessionStorage.getItem("auth") === "true";
+    // ou login persistente se já autenticou uma vez
+    return sessionStorage.getItem("auth") === "true" || localStorage.getItem("alreadyLoggedIn") === "true";
   });
 
   const handleLogin = () => {
     setAuthenticated(true);
     sessionStorage.setItem("auth", "true");
+    // Garante persistência para próximos acessos
+    localStorage.setItem("alreadyLoggedIn", "true");
   };
 
   if (!authenticated) {

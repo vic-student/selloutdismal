@@ -30,10 +30,10 @@ export function TeamChart({ data }: TeamChartProps) {
   };
 
   return (
-    <div className="bg-card rounded-xl shadow-card border border-border/50 p-5 animate-fade-in">
-      <h3 className="text-lg font-semibold font-display mb-4">Performance por Equipe</h3>
+    <div className="bg-card rounded-xl shadow-card border border-border/50 p-3 sm:p-5 animate-fade-in">
+      <h3 className="text-base sm:text-lg font-semibold font-display mb-3 sm:mb-4">Performance por Equipe</h3>
       
-      <div className="h-[280px]">
+      <div className="h-[220px] sm:h-[280px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={teamData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(214, 20%, 90%)" vertical={false} />
@@ -75,24 +75,24 @@ export function TeamChart({ data }: TeamChartProps) {
         </ResponsiveContainer>
       </div>
 
-      <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-border">
+      <div className="flex flex-wrap gap-2 sm:gap-4 mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border">
         {teamData.map((team) => (
-          <div key={team.equipe} className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
+          <div key={team.equipe} className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-4">
+            <div className="flex items-center gap-1 sm:gap-2">
               <div 
-                className="w-3 h-3 rounded-full" 
+                className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full" 
                 style={{ backgroundColor: colors.sellOut }}
               />
-              <span className="text-sm text-muted-foreground">
+              <span className="text-xs sm:text-sm text-muted-foreground">
                 {team.equipe}: <span className="font-semibold text-foreground">{team.sellOut}</span> vendas
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               <div 
-                className="w-3 h-3 rounded-full" 
+                className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full" 
                 style={{ backgroundColor: colors.valor }}
               />
-              <span className="text-sm text-muted-foreground">
+              <span className="text-xs sm:text-sm text-muted-foreground">
                 <span className="font-semibold text-foreground">R$ {team.valor.toFixed(2)}</span>
               </span>
             </div>
