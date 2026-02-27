@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { DollarSign, Users, Store, ShoppingCart } from "lucide-react";
+import { DollarSign, Users, Store, ShoppingCart, Target, Menu } from "lucide-react";
 import { salesData, SalesRecord, getUniqueMeses, getUniqueAnos } from "@/data/salesData";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { FilterPanel } from "@/components/dashboard/FilterPanel";
@@ -8,14 +8,30 @@ import { SalesTable } from "@/components/dashboard/SalesTable";
 import { TeamChart } from "@/components/dashboard/TeamChart";
 import { VendedorChart } from "@/components/dashboard/VendedorChart";
 import { TopBalconistas } from "@/components/dashboard/TopBalconistas";
+import { SellInDashboard } from "@/components/dashboard/SellInDashboard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Index = () => {
+  // Mapeamento de número do mês para nome em português
+  const mesesPtBr = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+
   // Definir filtros iniciais para mês e ano atuais (fallback para 'all' se não existirem nos dados)
   const availableMeses = getUniqueMeses();
   const availableAnos = getUniqueAnos().map(String);
-  // Força mês e ano para Janeiro/2026 se existirem
-  const defaultMes = availableMeses.includes("Janeiro") ? "Janeiro" : "all";
-  const defaultAno = availableAnos.includes("2026") ? "2026" : "all";
+  
+  // Obter mês e ano atuais
+  const currentDate = new Date();
+  const currentMesNome = mesesPtBr[currentDate.getMonth()];
+  const currentAno = String(currentDate.getFullYear());
+  
+  // Usar mês/ano atual se existirem nos dados, senão usar 'all'
+  const defaultMes = availableMeses.includes(currentMesNome) ? currentMesNome : "all";
+  const defaultAno = availableAnos.includes(currentAno) ? currentAno : "all";
 
   const [filters, setFilters] = useState({
     equipe: "all",
@@ -73,10 +89,78 @@ const Index = () => {
     }).format(value);
   };
 
+  const [activeTab, setActiveTab] = useState("sell-out");
+
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader filters={filters} onFilterChange={handleFilterChange} />
-      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
+      {/* Header with Tabs */}
+      <header className="sticky top-0 z-50 w-full gradient-hero">
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <img 
+                src="https://i.ibb.co/zVr0SP5p/image-removebg-preview-54.png" 
+                alt="Energia Premiada" 
+                className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+              />
+              <div>
+                <h1 className="text-base sm:text-xl md:text-2xl font-bold font-display text-primary-foreground leading-tight">
+                  Energia Premiada - Dismal Matriz
+                </h1>
+                <p className="text-[10px] sm:text-xs md:text-sm text-primary-foreground/70">
+                  Atualizado em 09/02/2026 às 11:30
+                </p>
+              </div>
+            </div>
+
+            {/* Mobile Menu - only for Sell Out */}
+            {activeTab === "sell-out" && (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="lg:hidden text-primary-foreground hover:bg-primary-foreground/10 h-9 w-9 sm:h-10 sm:w-10"
+                  >
+                    <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[85vw] max-w-[320px] p-0 overflow-y-auto">
+                  <div className="p-4 sm:p-6">
+                    <h2 className="text-base sm:text-lg font-semibold mb-4 font-display">
+                      Filtros
+                    </h2>
+                    <FilterPanel
+                      filters={filters}
+                      onFilterChange={handleFilterChange}
+                      isMobile
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Tabs Navigation */}
+      <div className="container mx-auto px-3 sm:px-4 pt-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full max-w-md grid-cols-2 mb-4">
+            <TabsTrigger value="sell-out" className="flex items-center gap-2">
+              <ShoppingCart className="w-4 h-4" />
+              <span className="hidden sm:inline">Sell Out</span>
+              <span className="sm:hidden">Out</span>
+            </TabsTrigger>
+            <TabsTrigger value="sell-in" className="flex items-center gap-2">
+              <Target className="w-4 h-4" />
+              <span className="hidden sm:inline">Sell In</span>
+              <span className="sm:hidden">In</span>
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="sell-out" className="mt-0">
+            <div className="space-y-4 sm:space-y-6">
         {/* Desktop Filters */}
         <FilterPanel filters={filters} onFilterChange={handleFilterChange} />
         {/* Stats Grid */}
@@ -124,7 +208,15 @@ const Index = () => {
         <div className="mt-4 sm:mt-6">
           <SalesTable data={filteredData} />
         </div>
-      </main>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="sell-in" className="mt-0">
+            <SellInDashboard />
+          </TabsContent>
+        </Tabs>
+      </div>
+
       {/* Footer */}
       <footer className="border-t border-border mt-6 sm:mt-8">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 text-center text-xs sm:text-sm text-muted-foreground">

@@ -30,8 +30,8 @@ export function DashboardHeader({ filters, onFilterChange }: DashboardHeaderProp
                 Sell Out - Energia Premiada
               </h1>
               <p className="text-[10px] sm:text-xs md:text-sm text-primary-foreground/70">
-                30/01/2026 às 10:00
-              </p>
+                Atualizado em 23/02/2026 às 11:30h
+              </p>/
             </div>
           </div>
 

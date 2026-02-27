@@ -44,11 +44,8 @@ export function FilterPanel({ filters, onFilterChange, isMobile = false }: Filte
   const clearFilters = () => {
     onFilterChange("equipe", "all");
     onFilterChange("vendedor", "all");
-    // Força mês e ano para Janeiro/2026 se existirem nas opções
-    const meses = getUniqueMeses();
-    const anos = getUniqueAnos().map(String);
-    onFilterChange("mes", meses.includes("Janeiro") ? "Janeiro" : "all");
-    onFilterChange("ano", anos.includes("2026") ? "2026" : "all");
+    onFilterChange("mes", "all");
+    onFilterChange("ano", "all");
     onFilterChange("status", "all");
     onFilterChange("searchBalconista", "");
     onFilterChange("searchRevenda", "");
