@@ -108,7 +108,7 @@ const Index = () => {
                   Energia Premiada - Dismal Matriz
                 </h1>
                 <p className="text-[10px] sm:text-xs md:text-sm text-primary-foreground/70">
-                  Atualizado em 09/02/2026 às 11:30
+                  Atualizado em 27/02/2026 às 09:30
                 </p>
               </div>
             </div>
